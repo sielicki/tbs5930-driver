@@ -2160,21 +2160,17 @@ static int m88rs6060_init(struct dvb_frontend *fe)
 {
 	struct i2c_client *client = fe->demodulator_priv;
 	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
 
 	/*warm state */
 	dev->warm = true;
 
-	//
 	c->cnr.len = 1;
 	c->cnr.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
 	c->post_bit_error.len = 1;
 	c->post_bit_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
 	c->post_bit_count.len = 1;
 	c->post_bit_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-
-	//dev_info(&i2c->dev, "%s finished\n", __func__);
 
 	return 0;
 
