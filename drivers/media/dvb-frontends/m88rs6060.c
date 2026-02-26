@@ -627,53 +627,6 @@ static void si5351_clock_enable(struct si5351_priv *priv,enum si5351_clock clk, 
 
 }
 
-/*
- * si5351_drive_strength(enum si5351_clock clk, enum si5351_drive drive)
- *
- * Sets the drive strength of the specified clock output
- *
- * clk - Clock output
- *   (use the si5351_clock enum)
- * drive - Desired drive level
- *   (use the si5351_drive enum)
- */
-static void si5351_drive_strength(struct si5351_priv *priv, enum si5351_clock clk, enum si5351_drive drive)
-{
-	u8 reg_val;
-
-	const u8 mask = 0x03;
-
-	if(si5351_read(priv,SI5351_CLK0_CTRL + (u8)clk, &reg_val) != 0)
-	{
-		return;
-	}
-
-	switch(drive)
-	{
-	case SI5351_DRIVE_2MA:
-		reg_val &= ~(mask);
-		reg_val |= 0x00;
-		break;
-	case SI5351_DRIVE_4MA:
-		reg_val &= ~(mask);
-		reg_val |= 0x01;
-		break;
-	case SI5351_DRIVE_6MA:
-		reg_val &= ~(mask);
-		reg_val |= 0x02;
-		break;
-	case SI5351_DRIVE_8MA:
-		reg_val &= ~(mask);
-		reg_val |= 0x03;
-		break;
-	default:
-		break;
-	}
-
-	si5351_write(priv,SI5351_CLK0_CTRL + (u8)clk, reg_val);
-}
-
-
 static u32 multisynth_calc(u32 freq, struct Si5351RegSet *reg)
 {
 	u32 pll_freq;
