@@ -7,6 +7,14 @@
 */
 #include "m88rs6060_priv.h"
 #include <linux/mutex.h>
+
+#ifndef FEC_29_45
+#define FEC_29_45 FEC_AUTO
+#endif
+#ifndef FEC_31_45
+#define FEC_31_45 FEC_AUTO
+#endif
+
 #define HWTUNE
 
 static LIST_HEAD(m88rs6060list);
@@ -531,69 +539,6 @@ static u32 pll_calc(u32 freq, struct Si5351RegSet *reg, int correction)
 	reg->p3 = p3;
 
 	return freq;
-}
-/*
- * si5351_set_pll(uint32_t pll_freq, enum si5351_pll target_pll)
- *
- * Set the specified PLL to a specific oscillation frequency
- *
- * pll_freq - Desired PLL frequency
- * target_pll - Which PLL to set
- *     (use the si5351_pll enum)
- */
-static void si5351_set_pll(struct si5351_priv *priv,u32 pll_freq, enum si5351_pll target_pll)
-{
-
-	struct Si5351RegSet pll_reg;
-
-	pll_calc(pll_freq, &pll_reg, 0);
-	/* Derive the register values to write */
-	/* Prepare an array for parameters to be written to */
-
-	u8 params[30];
-	u8 i = 0;
-	u8 temp;
-
-	/* Registers 26-27 */
-	temp = ((pll_reg.p3 >> 8) & 0xFF);
-	params[i++] = temp;
-
-	temp = (u8)(pll_reg.p3  & 0xFF);
-	params[i++] = temp;
-
-	/* Register 28 */
-	temp = (u8)((pll_reg.p1 >> 16) & 0x03);
-	params[i++] = temp;
-
-	/* Registers 29-30 */
-	temp = (u8)((pll_reg.p1 >> 8) & 0xFF);
-	params[i++] = temp;
-
-	temp = (u8)(pll_reg.p1  & 0xFF);
-	params[i++] = temp;
-
-	/* Register 31 */
-	temp = (u8)((pll_reg.p3 >> 12) & 0xF0);
-	temp += (u8)((pll_reg.p2 >> 16) & 0x0F);
-	params[i++] = temp;
-
-	/* Registers 32-33 */
-	temp = (u8)((pll_reg.p2 >> 8) & 0xFF);
-	params[i++] = temp;
-
-	temp = (u8)(pll_reg.p2  & 0xFF);
-	params[i++] = temp;
-
-	/* Write the parameters */
-	if(target_pll == SI5351_PLLA)
-	{
-		si5351_write_bulk(priv,SI5351_PLLA_PARAMETERS, i + 1, params);
-	}
-	else if(target_pll == SI5351_PLLB)
-	{
-		si5351_write_bulk(priv,SI5351_PLLB_PARAMETERS, i + 1, params);
-	}
-
 }
 
 /*
@@ -3208,56 +3153,6 @@ static int m88rs6060_get_frontend(struct dvb_frontend *fe, struct dtv_frontend_p
 
  return 0;
 }
-static void m88rs6060_spi_read(struct dvb_frontend *fe,
-			       struct ecp3_info *ecp3inf)
-{
-	struct i2c_client *client = fe->demodulator_priv;
-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
-
-	if (dev->config.read_properties)
-		dev->config.read_properties(i2c, ecp3inf->reg,
-				     &(ecp3inf->data));
-
-	return;
-}
-
-static void m88rs6060_spi_write(struct dvb_frontend *fe,
-				struct ecp3_info *ecp3inf)
-{
-		struct i2c_client *client = fe->demodulator_priv;
-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
-
-	if (dev->config.write_properties)
-		dev->config.write_properties(i2c, ecp3inf->reg,
-				      ecp3inf->data);
-	return;
-}
-
-static void m88rs6060_eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
-{
-	struct i2c_client *client = fe->demodulator_priv;
-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
-
-	if (dev->config.read_eeprom)
-		dev->config.read_eeprom(i2c, eepinf->reg,
-				      &(eepinf->data));
-	return ;
-}
-
-static void m88rs6060_eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
-{
-	struct i2c_client *client = fe->demodulator_priv;
-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
-
-	if (dev->config.write_eeprom)
-		dev->config.write_eeprom(i2c, eepinf->reg,
-				      eepinf->data);
-	return ;
-}
 
 static const struct dvb_frontend_ops m88rs6060_ops = {
 	.delsys = {SYS_DVBS, SYS_DVBS2},
@@ -3291,10 +3186,6 @@ static const struct dvb_frontend_ops m88rs6060_ops = {
 	.set_tone = m88rs6060_set_tone,
 	.diseqc_send_burst = m88rs6060_diseqc_send_burst,
 	.diseqc_send_master_cmd = m88rs6060_diseqc_send_master_cmd,
-	.spi_read = m88rs6060_spi_read,
-	.spi_write = m88rs6060_spi_write,
-	.eeprom_read = m88rs6060_eeprom_read,
-	.eeprom_write = m88rs6060_eeprom_write,
 
 };
 static int m88rs6060_ready(struct m88rs6060_dev *dev)
