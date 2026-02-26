@@ -379,10 +379,10 @@ static int si5351_write_bulk(struct si5351_priv *priv,u8 reg, u8 len,u8*data)
 	 ret = i2c_transfer(i2c, &msg, 1);
 	 if (ret != 1) {
 		dev_err(&i2c->dev,
-			"si5351(ret=%i, reg=0x%02x, value=0x%02x)\n",
-			 ret, reg, data);
+			"si5351(ret=%i, reg=0x%02x, len=%u)\n",
+			 ret, reg, len);
 		return -EREMOTEIO;
-		}	
+		}
 	 return 0;
 }
 
