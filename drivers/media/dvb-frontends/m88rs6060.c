@@ -3134,10 +3134,8 @@ static int m88rs6060_get_frontend(struct dvb_frontend *fe, struct dtv_frontend_p
 {
 	struct i2c_client *client = fe->demodulator_priv;
 	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
-	struct i2c_adapter *i2c = dev->base->i2c;
 	struct MT_FE_CHAN_INFO_DVBS2 p_info;
-	
-	
+
 	m88rs6060_get_channel_info(dev,&p_info);
 	
 	switch(p_info.mod_mode)
