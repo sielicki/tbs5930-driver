@@ -347,7 +347,6 @@ static int si5351_write(struct si5351_priv *priv,u8 reg,u8 data)
 {
 	struct i2c_adapter *i2c = priv->base1->i2c_si5351;
 	u8 buf[] = { reg, data };
-	u8 val;
 	int ret;
 	struct i2c_msg msg = {
 		.addr = SI5351_BUS_BASE_ADDR,.flags = 0,.buf = buf,.len = 2
@@ -368,7 +367,6 @@ static int si5351_write_bulk(struct si5351_priv *priv,u8 reg, u8 len,u8*data)
 {
 	struct i2c_adapter *i2c = priv->base1->i2c_si5351;
 	u8 buf[80];
-	u8 val;
 	int ret;
 
 	 buf[0] = reg;
@@ -393,7 +391,6 @@ static u8 si5351_read(struct si5351_priv *priv,u8 reg,u8 *data)
 {
 	struct i2c_adapter *i2c = priv->base1->i2c_si5351;
 	int ret;
-	unsigned val;
 	u8 b0[] = { reg };
 	struct i2c_msg msg[] = {
 		{
