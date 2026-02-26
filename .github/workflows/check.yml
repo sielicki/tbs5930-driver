@@ -1,0 +1,15 @@
+name: Nix Flake Check
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/determinate-nix-action@v3
+      - uses: DeterminateSystems/flake-checker-action@v12
+      - run: nix flake check -L
