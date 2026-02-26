@@ -2,7 +2,7 @@
   description = "TBS5930 DVB media driver fork (out-of-tree)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     kmod-ci.url = "github:sielicki/kmod-ci";
   };
