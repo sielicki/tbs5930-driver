@@ -1,0 +1,43 @@
+#+TITLE: TBS5930 DVB-S/S2/S2X Out-of-Tree Driver
+#+AUTHOR: Nick Sielicki
+
+* Overview
+
+Out-of-tree Linux kernel driver for the TurboSight TBS 5930 USB DVB-S/S2/S2X
+tuner. Builds against modern mainline kernels (6.x+) as a loadable module.
+
+Produces two kernel modules:
+- =dvb-usb-tbs5930= — USB adapter driver (Cypress FX2 + TBS protocol)
+- =m88rs6060= — DVB-S/S2/S2X demodulator/tuner frontend
+
+Requires firmware: =dvb-usb-id5930.fw=
+
+* Origin & Modifications
+
+Based on the open-source [[https://github.com/tbsdtv/linux_media][TBS linux_media]] driver tree. The code has been
+significantly modified from the TBS original:
+
+- Ported from the legacy =dvb-usb= (v1) framework to =dvb-usb-v2=
+- Fixed a firmware upload buffer overread on non-64-byte-aligned firmware sizes
+- Replaced magic numbers throughout with named constants
+- Documented the FX2 USB command dispatcher protocol
+- Added proper power lifecycle management (=power_ctrl=)
+- Various correctness fixes (dead stores, redundant copies, I2C transaction
+  consolidation, =MODULE_FIRMWARE= declaration)
+- Stripped out unused TBS-proprietary code (SPI/EEPROM ops, custom structs)
+- Adapted the m88rs6060 frontend for upstream kernel compatibility (missing FEC
+  rate defines, removed dead code referencing TBS-only structs)
+- Packaged for out-of-tree Nix builds
+
+* Building with Nix
+
+#+begin_src sh
+nix build
+#+end_src
+
+The flake produces a kernel module package. To use it in a NixOS configuration,
+add the flake as an input and include the module overlay.
+
+* License
+
+GPL-2.0-only, per the original TBS source.
