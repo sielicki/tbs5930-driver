@@ -22,6 +22,7 @@
           module = ./default.nix;
           overlay = true;
           defaultKernel = "linux_latest";
+          enableNixosModule = true;
         };
       };
     };
