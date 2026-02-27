@@ -20,11 +20,11 @@
     },
     "kmod-ci": {
       "locked": {
-        "lastModified": 1772136756,
-        "narHash": "sha256-SQZZIQTI6GbfwC3vgoXuAKn3RLLWg3KtkkG7qmjvDHM=",
+        "lastModified": 1772151330,
+        "narHash": "sha256-rY/nrQYJbcInDn22gAztRa+dm7Yz+R9RTOTllHB8Ot8=",
         "owner": "sielicki",
         "repo": "kmod-ci",
-        "rev": "900ce242efa7510b76ae162908d40e58cc565777",
+        "rev": "be844004e80c31598ae6ecef81824f45d0e9bb3f",
         "type": "github"
       },
       "original": {
@@ -35,11 +35,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1772136316,
-        "narHash": "sha256-f+7Up2tJE2U7N+FVws339tGm1UkSNBt0qckEUuZ8cIA=",
+        "lastModified": 1772150971,
+        "narHash": "sha256-nUJWQxihmYsMAGHGhOclhOYoLObxFMvFSAGPy+8Kn2c=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f3093f6ab5987f82aacd85771930a61cb5bcf4c1",
+        "rev": "209a1492a121a0d4fdbbe7856fef24851e4d6ca9",
         "type": "github"
       },
       "original": {
